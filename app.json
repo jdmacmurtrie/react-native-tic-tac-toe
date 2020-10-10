@@ -1,0 +1,12 @@
+{
+  "name": "react-native-bingo-game",
+  "displayName": "react-native-bingo-game",
+  "expo": {
+    "name": "react-native-bingo-game",
+    "slug": "react-native-bingo-game",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}

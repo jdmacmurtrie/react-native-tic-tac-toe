@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
+import HorizontalHighlight from "./HorizontalHighlight";
 import Square from "./Square";
 
 const squares = [
@@ -17,7 +18,7 @@ const squares = [
 const horizontal = ["A", "B", "C"];
 const vertical = ["1", "2", "3"];
 
-export class GameBoard extends Component {
+class GameBoard extends Component {
   constructor(props) {
     super(props);
 
@@ -49,14 +50,24 @@ export class GameBoard extends Component {
     const checkHorizontal = horizontal.map((letter) =>
       selectedSquares.filter((square) => square.letter === letter)
     );
+    const checkVertical = vertical.map((number) =>
+      selectedSquares.filter((square) => square.number === number)
+    );
+
     const horizontalBingo = checkHorizontal.find((cluster) => cluster.length === 3);
+    const verticalBingo = checkVertical.find((cluster) => cluster.length === 3);
+
     if (horizontalBingo) {
       this.setState({ horizontalBingo: horizontalBingo[0].letter });
+    }
+    if (verticalBingo) {
+      this.setState({ verticalBingo: verticalBingo[0].number });
     }
   }
 
   render() {
-    const { selectedSquares } = this.state;
+    const { horizontalBingo, selectedSquares, verticalBingo } = this.state;
+    console.log(horizontalBingo);
     return (
       <View style={styles.container}>
         {squares.map((square) => {
@@ -71,7 +82,9 @@ export class GameBoard extends Component {
             />
           );
         })}
-        {/* <View style={styles.experiment} /> */}
+
+        {horizontalBingo && <HorizontalHighlight winningRow={horizontalBingo} />}
+        {/* {verticalBingo && <View style={styles.vertical} />} */}
       </View>
     );
   }
@@ -86,15 +99,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#87CEFA",
     flexWrap: "wrap",
     flexDirection: "row",
-    padding: 10,
-    // zIndex: 0,
+    justifyContent: "space-around",
   },
-  // experiment: {
-  //   backgroundColor: "#000000",
-  //   width: 2,
-  //   height: "100%",
-  //   zIndex: 2,
-  //   // elevation: 2,
-  //   position: "absolute",
-  // },
 });

@@ -16,6 +16,6 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
   },
-  plugins: ["react"],
+  plugins: ["react", "@babel/plugin-proposal-optional-chaining"],
   rules: {},
 };

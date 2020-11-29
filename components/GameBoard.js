@@ -28,6 +28,7 @@ class GameBoard extends Component {
     this.state = {
       // diagonalWin: undefined,
       horizontalWin: undefined,
+      isWin: false,
       selectedSquares: [],
       verticalWin: undefined,
     };
@@ -58,13 +59,11 @@ class GameBoard extends Component {
     const horizontalWin = checkHorizontal.find((cluster) => cluster.length === 3);
     const verticalWin = checkVertical.find((cluster) => cluster.length === 3);
 
-    if (horizontalWin) {
-      this.setState({ horizontalWin: horizontalWin[0].letter });
-    }
-
-    if (verticalWin) {
-      this.setState({ verticalWin: verticalWin[0].number });
-    }
+    this.setState({
+      horizontalWin: horizontalWin?.[0].letter,
+      isWin: horizontalWin?.[0].letter || verticalWin?.[0].number,
+      verticalWin: verticalWin?.[0].number,
+    });
   }
 
   render() {

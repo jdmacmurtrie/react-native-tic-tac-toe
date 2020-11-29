@@ -1,9 +1,9 @@
 {
-  "name": "react-native-bingo-game",
-  "displayName": "react-native-bingo-game",
+  "name": "react-native-tic-tac-toe-game",
+  "displayName": "react-native-tic-tac-toe-game",
   "expo": {
-    "name": "react-native-bingo-game",
-    "slug": "react-native-bingo-game",
+    "name": "react-native-tic-tac-toe-game",
+    "slug": "react-native-tic-tac-toe-game",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"

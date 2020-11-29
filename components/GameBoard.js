@@ -26,10 +26,10 @@ class GameBoard extends Component {
     this.handlePress = this.handlePress.bind(this);
 
     this.state = {
-      diagonalBingo: undefined,
-      horizontalBingo: undefined,
+      diagonalWin: undefined,
+      horizontalWin: undefined,
       selectedSquares: [],
-      verticalBingo: undefined,
+      verticalWin: undefined,
     };
   }
 
@@ -41,11 +41,11 @@ class GameBoard extends Component {
       : selectedSquares.concat(selected);
 
     this.setState({ selectedSquares: newSelected }, () => {
-      this.checkBingo();
+      this.checkWin();
     });
   }
 
-  checkBingo() {
+  checkWin() {
     const { selectedSquares } = this.state;
 
     const checkHorizontal = horizontal.map((letter) =>
@@ -55,19 +55,19 @@ class GameBoard extends Component {
       selectedSquares.filter((square) => square.number === number)
     );
 
-    const horizontalBingo = checkHorizontal.find((cluster) => cluster.length === 3);
-    const verticalBingo = checkVertical.find((cluster) => cluster.length === 3);
+    const horizontalWin = checkHorizontal.find((cluster) => cluster.length === 3);
+    const verticalWin = checkVertical.find((cluster) => cluster.length === 3);
 
-    if (horizontalBingo) {
-      this.setState({ horizontalBingo: horizontalBingo[0].letter });
+    if (horizontalWin) {
+      this.setState({ horizontalWin: horizontalWin[0].letter });
     }
-    if (verticalBingo) {
-      this.setState({ verticalBingo: verticalBingo[0].number });
+    if (verticalWin) {
+      this.setState({ verticalWin: verticalWin[0].number });
     }
   }
 
   render() {
-    const { horizontalBingo, selectedSquares, verticalBingo } = this.state;
+    const { horizontalWin, selectedSquares, verticalWin } = this.state;
 
     return (
       <View style={styles.container}>
@@ -84,8 +84,8 @@ class GameBoard extends Component {
           );
         })}
 
-        {horizontalBingo && <HorizontalHighlight winningRow={horizontalBingo} />}
-        {verticalBingo && <VerticalHighlight winningColumn={verticalBingo} />}
+        {horizontalWin && <HorizontalHighlight winningRow={horizontalWin} />}
+        {verticalWin && <VerticalHighlight winningColumn={verticalWin} />}
       </View>
     );
   }

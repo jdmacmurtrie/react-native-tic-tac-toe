@@ -26,7 +26,7 @@ class GameBoard extends Component {
     this.handlePress = this.handlePress.bind(this);
 
     this.state = {
-      diagonalWin: undefined,
+      // diagonalWin: undefined,
       horizontalWin: undefined,
       selectedSquares: [],
       verticalWin: undefined,
@@ -61,6 +61,7 @@ class GameBoard extends Component {
     if (horizontalWin) {
       this.setState({ horizontalWin: horizontalWin[0].letter });
     }
+
     if (verticalWin) {
       this.setState({ verticalWin: verticalWin[0].number });
     }
@@ -101,5 +102,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     flexDirection: "row",
     justifyContent: "space-around",
+    paddingTop: 120,
+    paddingBottom: 120,
   },
 });

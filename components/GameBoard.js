@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import HorizontalHighlight from "./HorizontalHighlight";
+import ResetButton from "./ResetButton";
 import VerticalHighlight from "./VerticalHighlight";
 import Square from "./Square";
 
@@ -35,7 +36,11 @@ class GameBoard extends Component {
   }
 
   handlePress(selected) {
-    const { selectedSquares } = this.state;
+    const { isWin, selectedSquares } = this.state;
+
+    if (isWin) {
+      return null;
+    }
 
     const newSelected = selectedSquares.includes(selected)
       ? selectedSquares.filter((square) => square.id !== selected.id)
@@ -66,8 +71,17 @@ class GameBoard extends Component {
     });
   }
 
+  handleReset = () => {
+    this.setState({
+      horizontalWin: undefined,
+      isWin: false,
+      selectedSquares: [],
+      verticalWin: undefined,
+    });
+  };
+
   render() {
-    const { horizontalWin, selectedSquares, verticalWin } = this.state;
+    const { horizontalWin, isWin, selectedSquares, verticalWin } = this.state;
 
     return (
       <View style={styles.container}>
@@ -86,6 +100,7 @@ class GameBoard extends Component {
 
         {horizontalWin && <HorizontalHighlight winningRow={horizontalWin} />}
         {verticalWin && <VerticalHighlight winningColumn={verticalWin} />}
+        {isWin && <ResetButton handleReset={this.handleReset} />}
       </View>
     );
   }

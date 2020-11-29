@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { string, func, bool, shape } from "prop-types";
+import { func, shape, string } from "prop-types";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const Square = ({ data, handlePress, selected }) => {
@@ -8,7 +8,7 @@ const Square = ({ data, handlePress, selected }) => {
     handlePress(data);
   };
 
-  const touchableStyle = selected ? [styles.touchable, styles.selected] : styles.touchable;
+  const touchableStyle = selected ? [styles.touchable, styles[selected]] : styles.touchable;
 
   return (
     <View style={styles.square}>
@@ -20,9 +20,9 @@ const Square = ({ data, handlePress, selected }) => {
 };
 
 Square.propTypes = {
-  handlePress: func,
-  selected: bool,
   data: shape({ id: string, text: string }),
+  handlePress: func,
+  selected: string,
 };
 
 export default Square;
@@ -30,15 +30,18 @@ export default Square;
 const styles = StyleSheet.create({
   square: {
     flexBasis: 100,
-    borderColor: "red",
-    borderWidth: 2,
+    // borderColor: "black",
+    borderWidth: 1,
     backgroundColor: "white",
     height: "30%",
     margin: 10,
     borderRadius: 10,
   },
-  selected: {
+  selected1: {
     backgroundColor: "yellow",
+  },
+  selected2: {
+    backgroundColor: "orange",
   },
   touchable: {
     borderRadius: 10,

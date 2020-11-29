@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
-import HorizontalHighlight from "./HorizontalHighlight";
+// import HorizontalHighlight from "./HorizontalHighlight";
 import ResetButton from "./ResetButton";
-import VerticalHighlight from "./VerticalHighlight";
+// import VerticalHighlight from "./VerticalHighlight";
 import Square from "./Square";
 
 const squares = [
@@ -24,41 +24,49 @@ class GameBoard extends Component {
   constructor(props) {
     super(props);
 
-    this.handlePress = this.handlePress.bind(this);
-
     this.state = {
+      allSelected: [],
       // diagonalWin: undefined,
       horizontalWin: undefined,
       isWin: false,
-      selectedSquares: [],
+      player1Selected: [],
+      player2Selected: [],
+      turn: 1,
       verticalWin: undefined,
     };
   }
 
-  handlePress(selected) {
-    const { isWin, selectedSquares } = this.state;
+  handlePress = (selected) => {
+    const { isWin, turn, allSelected } = this.state;
 
-    if (isWin) {
+    if (isWin || allSelected.includes(selected)) {
       return null;
     }
 
-    const newSelected = selectedSquares.includes(selected)
-      ? selectedSquares.filter((square) => square.id !== selected.id)
-      : selectedSquares.concat(selected);
+    const playerSelected = `player${turn}Selected`;
 
-    this.setState({ selectedSquares: newSelected }, () => {
-      this.checkWin();
-    });
-  }
+    this.setState(
+      {
+        allSelected: [...allSelected, selected],
+        [playerSelected]: [...this.state[playerSelected], selected],
+      },
+      () => {
+        this.checkWin();
+        this.changeTurn();
+      }
+    );
+  };
 
-  checkWin() {
-    const { selectedSquares } = this.state;
+  checkWin = () => {
+    const { allSelected, turn } = this.state;
+
+    const playerSelected = this.state[`player${turn}Selected`];
 
     const checkHorizontal = horizontal.map((letter) =>
-      selectedSquares.filter((square) => square.letter === letter)
+      playerSelected.filter((square) => square.letter === letter)
     );
     const checkVertical = vertical.map((number) =>
-      selectedSquares.filter((square) => square.number === number)
+      playerSelected.filter((square) => square.number === number)
     );
 
     const horizontalWin = checkHorizontal.find((cluster) => cluster.length === 3);
@@ -69,24 +77,37 @@ class GameBoard extends Component {
       isWin: horizontalWin?.[0].letter || verticalWin?.[0].number,
       verticalWin: verticalWin?.[0].number,
     });
-  }
+  };
+
+  changeTurn = () => {
+    const { turn } = this.state;
+    const nextTurn = turn === 1 ? 2 : 1;
+
+    this.setState({ turn: nextTurn });
+  };
 
   handleReset = () => {
     this.setState({
       horizontalWin: undefined,
       isWin: false,
-      selectedSquares: [],
+      allSelected: [],
       verticalWin: undefined,
     });
   };
 
   render() {
-    const { horizontalWin, isWin, selectedSquares, verticalWin } = this.state;
+    const { horizontalWin, isWin, player1Selected, player2Selected, verticalWin } = this.state;
 
     return (
       <View style={styles.container}>
         {squares.map((square) => {
-          const selected = selectedSquares.includes(square);
+          let selected;
+
+          if (player1Selected.includes(square)) {
+            selected = "selected1";
+          } else if (player2Selected.includes(square)) {
+            selected = "selected2";
+          }
 
           return (
             <Square
@@ -98,9 +119,9 @@ class GameBoard extends Component {
           );
         })}
 
-        {horizontalWin && <HorizontalHighlight winningRow={horizontalWin} />}
-        {verticalWin && <VerticalHighlight winningColumn={verticalWin} />}
         {isWin && <ResetButton handleReset={this.handleReset} />}
+        {/* {horizontalWin && <HorizontalHighlight winningRow={horizontalWin} />} */}
+        {/* {verticalWin && <VerticalHighlight winningColumn={verticalWin} />} */}
       </View>
     );
   }

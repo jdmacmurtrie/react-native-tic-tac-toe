@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import HorizontalHighlight from "./HorizontalHighlight";
+import VerticalHighlight from "./VerticalHighlight";
 import Square from "./Square";
 
 const squares = [
@@ -67,7 +68,7 @@ class GameBoard extends Component {
 
   render() {
     const { horizontalBingo, selectedSquares, verticalBingo } = this.state;
-    console.log(horizontalBingo);
+
     return (
       <View style={styles.container}>
         {squares.map((square) => {
@@ -84,7 +85,7 @@ class GameBoard extends Component {
         })}
 
         {horizontalBingo && <HorizontalHighlight winningRow={horizontalBingo} />}
-        {/* {verticalBingo && <View style={styles.vertical} />} */}
+        {verticalBingo && <VerticalHighlight winningColumn={verticalBingo} />}
       </View>
     );
   }

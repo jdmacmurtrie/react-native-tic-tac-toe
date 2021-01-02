@@ -25,58 +25,85 @@ class GameBoard extends Component {
     super(props);
 
     this.state = {
-      allSelected: [],
-      // diagonalWin: undefined,
-      horizontalWin: undefined,
-      isWin: false,
-      player1Selected: [],
-      player2Selected: [],
+      allSelections: [],
+      gameOver: false,
+      player1Selections: [],
+      player2Selections: [],
       turn: 1,
-      verticalWin: undefined,
     };
   }
 
-  handlePress = (selected) => {
-    const { isWin, turn, allSelected } = this.state;
+  get playerSelections() {
+    const { turn } = this.state;
 
-    if (isWin || allSelected.includes(selected)) {
+    return this.state[`player${turn}Selections`];
+  }
+
+  handlePress = (selected) => {
+    const { gameOver, turn, allSelections } = this.state;
+
+    if (gameOver || allSelections.includes(selected)) {
       return null;
     }
 
-    const playerSelected = `player${turn}Selected`;
+    const currentplayer = `player${turn}Selections`;
+    const newAllSelections = [...allSelections, selected];
 
     this.setState(
       {
-        allSelected: [...allSelected, selected],
-        [playerSelected]: [...this.state[playerSelected], selected],
+        allSelections: newAllSelections,
+        [currentplayer]: [...this.playerSelections, selected],
       },
       () => {
-        this.checkWin();
-        this.changeTurn();
+        if (newAllSelections.length > 4) {
+          this.checkWin();
+        }
+        if (newAllSelections.length !== 9) {
+          this.changeTurn();
+        } else {
+          this.setState({ gameOver: true });
+        }
       }
     );
   };
 
   checkWin = () => {
-    const { allSelected, turn } = this.state;
-
-    const playerSelected = this.state[`player${turn}Selected`];
-
+    // the following "check" methods create array clusters of letters or numbers belonging to the current player.
+    // if a resultant cluster contains 3 objects, the current player wins.
     const checkHorizontal = horizontal.map((letter) =>
-      playerSelected.filter((square) => square.letter === letter)
+      this.playerSelections.filter((square) => square.letter === letter)
     );
+
     const checkVertical = vertical.map((number) =>
-      playerSelected.filter((square) => square.number === number)
+      this.playerSelections.filter((square) => square.number === number)
     );
 
     const horizontalWin = checkHorizontal.find((cluster) => cluster.length === 3);
     const verticalWin = checkVertical.find((cluster) => cluster.length === 3);
+    const diagonalWin = this.checkDiagonal();
 
     this.setState({
       horizontalWin: horizontalWin?.[0].letter,
-      isWin: horizontalWin?.[0].letter || verticalWin?.[0].number,
+      gameOver: horizontalWin || verticalWin || diagonalWin,
       verticalWin: verticalWin?.[0].number,
     });
+  };
+
+  checkDiagonal = () => {
+    // TODO make this more dynamic and less hard-coded
+    const sequence1 = ["A1", "B2", "C3"];
+    const sequence2 = ["A3", "B2", "C1"];
+
+    const selectedIds = this.playerSelections.map((square) => square.id);
+
+    if (!selectedIds.includes("B2")) {
+      return false;
+    }
+
+    const matchingSquares1 = selectedIds.filter((id) => sequence1.includes(id));
+    const matchingSquares2 = selectedIds.filter((id) => sequence2.includes(id));
+
+    return matchingSquares1.length === 3 || matchingSquares2.length === 3;
   };
 
   changeTurn = () => {
@@ -88,24 +115,24 @@ class GameBoard extends Component {
 
   handleReset = () => {
     this.setState({
-      horizontalWin: undefined,
-      isWin: false,
-      allSelected: [],
-      verticalWin: undefined,
+      gameOver: false,
+      allSelections: [],
+      player1Selections: [],
+      player2Selections: [],
     });
   };
 
   render() {
-    const { horizontalWin, isWin, player1Selected, player2Selected, verticalWin } = this.state;
+    const { gameOver, player1Selections, player2Selections } = this.state;
 
     return (
       <View style={styles.container}>
         {squares.map((square) => {
           let selected;
 
-          if (player1Selected.includes(square)) {
+          if (player1Selections.includes(square)) {
             selected = "selected1";
-          } else if (player2Selected.includes(square)) {
+          } else if (player2Selections.includes(square)) {
             selected = "selected2";
           }
 
@@ -119,7 +146,7 @@ class GameBoard extends Component {
           );
         })}
 
-        {isWin && <ResetButton handleReset={this.handleReset} />}
+        {gameOver && <ResetButton handleReset={this.handleReset} />}
         {/* {horizontalWin && <HorizontalHighlight winningRow={horizontalWin} />} */}
         {/* {verticalWin && <VerticalHighlight winningColumn={verticalWin} />} */}
       </View>

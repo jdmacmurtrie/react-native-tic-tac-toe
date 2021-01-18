@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
-// import HorizontalHighlight from "./HorizontalHighlight";
 import ResetButton from "./ResetButton";
-// import VerticalHighlight from "./VerticalHighlight";
 import Square from "./Square";
 
 const squares = [
@@ -90,13 +88,14 @@ class GameBoard extends Component {
   };
 
   checkDiagonal = () => {
-    // TODO make this more dynamic and less hard-coded
+    // TODO make this more dynamic.  This is too hard-coded.
     const sequence1 = ["A1", "B2", "C3"];
     const sequence2 = ["A3", "B2", "C1"];
 
     const selectedIds = this.playerSelections.map((square) => square.id);
 
     if (!selectedIds.includes("B2")) {
+      // Any diagonal win has to include B2.
       return false;
     }
 
@@ -108,6 +107,7 @@ class GameBoard extends Component {
 
   changeTurn = () => {
     const { turn } = this.state;
+    // TODO can't help but feel there's a simpler way to do this.
     const nextTurn = turn === 1 ? 2 : 1;
 
     this.setState({ turn: nextTurn });
@@ -145,10 +145,7 @@ class GameBoard extends Component {
             />
           );
         })}
-
         {gameOver && <ResetButton handleReset={this.handleReset} />}
-        {/* {horizontalWin && <HorizontalHighlight winningRow={horizontalWin} />} */}
-        {/* {verticalWin && <VerticalHighlight winningColumn={verticalWin} />} */}
       </View>
     );
   }

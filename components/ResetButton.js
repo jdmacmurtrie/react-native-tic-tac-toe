@@ -2,19 +2,13 @@ import React from "react";
 import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import { func } from "prop-types";
 
-const ResetButton = ({ handleReset }) => {
-  const onPress = () => {
-    handleReset();
-  };
-
-  return (
-    <View style={styles.container}>
-      <TouchableHighlight onPress={onPress}>
-        <Text style={styles.text}>RESET</Text>
-      </TouchableHighlight>
-    </View>
-  );
-};
+const ResetButton = ({ handleReset }) => (
+  <View style={styles.container}>
+    <TouchableHighlight onPress={() => handleReset()}>
+      <Text style={styles.text}>RESET</Text>
+    </TouchableHighlight>
+  </View>
+);
 
 ResetButton.propTypes = {
   handleReset: func,

@@ -4,15 +4,11 @@ import { func, shape, string } from "prop-types";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const Square = ({ data, handlePress, selected }) => {
-  const handleSelect = () => {
-    handlePress(data);
-  };
-
   const touchableStyle = selected ? [styles.touchable, styles[selected]] : styles.touchable;
 
   return (
     <View style={styles.square}>
-      <TouchableWithoutFeedback style={touchableStyle} onPress={handleSelect}>
+      <TouchableWithoutFeedback style={touchableStyle} onPress={() => handlePress(data)}>
         <Text>{data.text}</Text>
       </TouchableWithoutFeedback>
     </View>
@@ -30,7 +26,6 @@ export default Square;
 const styles = StyleSheet.create({
   square: {
     flexBasis: 100,
-    // borderColor: "black",
     borderWidth: 1,
     backgroundColor: "white",
     height: "30%",

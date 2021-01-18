@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { string } from "prop-types";
 
+// Left over from an early draft of the UI.  Keeping in case overlay styles are needed.
 const VerticalHighlight = ({ winningColumn }) => {
   const wrapperStyle = [styles.verticalWrapper, styles[`column${winningColumn}`]];
 
